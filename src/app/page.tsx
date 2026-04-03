@@ -10,7 +10,10 @@ import {
   Alert,
   Stack,
   Flex,
+  HStack,
+  Text,
 } from '@chakra-ui/react';
+import type { DeviceModel } from '@/esp/useEspOperations';
 import FileUpload, { FileUploadHandle } from '@/components/FileUpload';
 import Steps from '@/components/Steps';
 import { useEspOperations } from '@/esp/useEspOperations';
@@ -20,7 +23,8 @@ import {
 } from '@/remote/firmwareFetcher';
 
 export default function Home() {
-  const { actions, stepData, isRunning } = useEspOperations();
+  const { actions, stepData, isRunning, deviceModel, setDeviceModel } =
+    useEspOperations();
   const [officialFirmwareVersions, setOfficialFirmwareVersions] = useState<{
     en: string;
     ch: string;
@@ -41,6 +45,22 @@ export default function Home() {
 
   return (
     <Flex direction="column" gap="20px">
+      <Stack gap={3} as="section">
+        <Heading size="xl">Device model</Heading>
+        <HStack gap={3}>
+          {(['x4', 'x3'] as const).map((model) => (
+            <Button
+              key={model}
+              variant={deviceModel === model ? 'solid' : 'outline'}
+              onClick={() => setDeviceModel(model)}
+              disabled={isRunning}
+            >
+              Xteink {model.toUpperCase()}
+            </Button>
+          ))}
+        </HStack>
+      </Stack>
+      <Separator />
       <Alert.Root status="warning">
         <Alert.Indicator />
         <Alert.Content>
@@ -208,8 +228,8 @@ export default function Home() {
           <Alert.Title>Change device language</Alert.Title>
           <Alert.Description>
             Before starting the process, it is recommended to change the device
-            language to English. To do this, select “Settings” icon, then click
-            “OK / Confirm” button and “OK / Confirm” again until English is
+            language to English. To do this, select “Settings" icon, then click
+            “OK / Confirm" button and “OK / Confirm" again until English is
             shown. Otherwise, the language will still be Chinese after flashing
             and you may not notice changes.
           </Alert.Description>
@@ -220,10 +240,19 @@ export default function Home() {
         <Alert.Content>
           <Alert.Title>Device restart instructions</Alert.Title>
           <Alert.Description>
-            Once you complete a write operation, you will need to restart your
-            device by pressing and releasing the small “Reset” button near the
-            bottom right, followed quickly by pressing and holding of the main
-            power button for about 3 seconds.
+            {deviceModel === 'x3' ? (
+              <p>
+                Once you complete a write operation, disconnect the USB cable and
+                connect it again.
+              </p>
+            ) : (
+              <p>
+                Once you complete a write operation, you will need to restart
+                your device by pressing and releasing the small “Reset” button
+                near the bottom right, followed quickly by pressing and holding
+                of the main power button for about 3 seconds.
+              </p>
+            )}
           </Alert.Description>
         </Alert.Content>
       </Alert.Root>
