@@ -36,12 +36,13 @@ export default function Home() {
   const appPartitionFileInput = useRef<FileUploadHandle>(null);
 
   useEffect(() => {
-    getOfficialFirmwareVersions().then((versions) =>
+    setOfficialFirmwareVersions(null);
+    getOfficialFirmwareVersions(deviceModel).then((versions) =>
       setOfficialFirmwareVersions(versions),
     );
 
     getCommunityFirmwareRemoteData().then(setCommunityFirmwareVersions);
-  }, []);
+  }, [deviceModel]);
 
   return (
     <Flex direction="column" gap="20px">
