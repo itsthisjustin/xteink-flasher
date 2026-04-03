@@ -229,8 +229,8 @@ export default function Home() {
           <Alert.Title>Change device language</Alert.Title>
           <Alert.Description>
             Before starting the process, it is recommended to change the device
-            language to English. To do this, select “Settings" icon, then click
-            “OK / Confirm" button and “OK / Confirm" again until English is
+            language to English. To do this, select &ldquo;Settings&rdquo; icon, then click
+            &ldquo;OK / Confirm&rdquo; button and &ldquo;OK / Confirm&rdquo; again until English is
             shown. Otherwise, the language will still be Chinese after flashing
             and you may not notice changes.
           </Alert.Description>
