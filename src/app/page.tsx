@@ -36,13 +36,22 @@ export default function Home() {
   const appPartitionFileInput = useRef<FileUploadHandle>(null);
 
   useEffect(() => {
+    let cancelled = false;
     setOfficialFirmwareVersions(null);
-    getOfficialFirmwareVersions(deviceModel).then((versions) =>
-      setOfficialFirmwareVersions(versions),
-    );
+    getOfficialFirmwareVersions(deviceModel).then((versions) => {
+      if (!cancelled) {
+        setOfficialFirmwareVersions(versions);
+      }
+    });
 
-    getCommunityFirmwareRemoteData().then(setCommunityFirmwareVersions);
+    return () => {
+      cancelled = true;
+    };
   }, [deviceModel]);
+
+  useEffect(() => {
+    getCommunityFirmwareRemoteData().then(setCommunityFirmwareVersions);
+  }, []);
 
   return (
     <Flex direction="column" gap="20px">
@@ -53,6 +62,7 @@ export default function Home() {
             <Button
               key={model}
               variant={deviceModel === model ? 'solid' : 'outline'}
+              aria-pressed={deviceModel === model}
               onClick={() => setDeviceModel(model)}
               disabled={isRunning}
             >
@@ -249,7 +259,7 @@ export default function Home() {
             ) : (
               <p>
                 Once you complete a write operation, you will need to restart
-                your device by pressing and releasing the small “Reset” button
+                your device by pressing and releasing the small &ldquo;Reset&rdquo; button
                 near the bottom right, followed quickly by pressing and holding
                 of the main power button for about 3 seconds.
               </p>

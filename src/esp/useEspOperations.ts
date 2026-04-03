@@ -67,6 +67,37 @@ export function useEspOperations() {
       ? 'Disconnect (unplug and replug USB to restart)'
       : 'Reset device';
 
+  const validateAndDetectPartitionLayout = async (
+    espController: EspController,
+  ) => {
+    const partitionTable = await espController.readPartitionTable();
+
+    const validTables =
+      deviceModel === 'x3'
+        ? [x3PartitionTable, x4PartitionTable]
+        : [x4PartitionTable];
+
+    const matched = validTables.find((t) =>
+      matchesPartitionTable(partitionTable, t),
+    );
+
+    if (!matched) {
+      throw new Error(
+        `Unexpected partition configuration for ${deviceModel.toUpperCase()}. Make sure you've selected the correct device model.\nGot ${JSON.stringify(
+          partitionTable,
+          null,
+          2,
+        )}`,
+      );
+    }
+
+    espController.setPartitionLayout(
+      matchesPartitionTable(partitionTable, x3PartitionTable)
+        ? X3_PARTITION_LAYOUT
+        : X4_PARTITION_LAYOUT,
+    );
+  };
+
   const wrapWithRunning =
     <Args extends unknown[], T>(fn: (...a: Args) => Promise<T>) =>
     async (...a: Args) => {
@@ -95,36 +126,9 @@ export function useEspOperations() {
       return c;
     });
 
-    await runStep('Validate partition table', async () => {
-      const partitionTable = await espController.readPartitionTable();
-
-      // X3 devices may have stock or CrossPoint partition layouts
-      const validTables =
-        deviceModel === 'x3'
-          ? [x3PartitionTable, x4PartitionTable]
-          : [x4PartitionTable];
-
-      const matched = validTables.find((t) =>
-        matchesPartitionTable(partitionTable, t),
-      );
-
-      if (!matched) {
-        throw new Error(
-          `Unexpected partition configuration for ${deviceModel.toUpperCase()}. Make sure you've selected the correct device model.\nGot ${JSON.stringify(
-            partitionTable,
-            null,
-            2,
-          )}`,
-        );
-      }
-
-      // Update controller to use the detected layout
-      espController.setPartitionLayout(
-        matchesPartitionTable(partitionTable, x3PartitionTable)
-          ? X3_PARTITION_LAYOUT
-          : X4_PARTITION_LAYOUT,
-      );
-    });
+    await runStep('Validate partition table', () =>
+      validateAndDetectPartitionLayout(espController),
+    );
 
     const firmwareFile = await runStep('Download firmware', getFirmware);
 
@@ -205,36 +209,9 @@ export function useEspOperations() {
       return c;
     });
 
-    await runStep('Validate partition table', async () => {
-      const partitionTable = await espController.readPartitionTable();
-
-      // X3 devices may have stock or CrossPoint partition layouts
-      const validTables =
-        deviceModel === 'x3'
-          ? [x3PartitionTable, x4PartitionTable]
-          : [x4PartitionTable];
-
-      const matched = validTables.find((t) =>
-        matchesPartitionTable(partitionTable, t),
-      );
-
-      if (!matched) {
-        throw new Error(
-          `Unexpected partition configuration for ${deviceModel.toUpperCase()}. Make sure you've selected the correct device model.\nGot ${JSON.stringify(
-            partitionTable,
-            null,
-            2,
-          )}`,
-        );
-      }
-
-      // Update controller to use the detected layout
-      espController.setPartitionLayout(
-        matchesPartitionTable(partitionTable, x3PartitionTable)
-          ? X3_PARTITION_LAYOUT
-          : X4_PARTITION_LAYOUT,
-      );
-    });
+    await runStep('Validate partition table', () =>
+      validateAndDetectPartitionLayout(espController),
+    );
 
     const [otaPartition, backupPartitionLabel] = await runStep(
       'Read otadata partition',
@@ -378,6 +355,7 @@ export function useEspOperations() {
   const readAppPartition = async (partitionLabel: 'app0' | 'app1') => {
     initializeSteps([
       'Connect to device',
+      'Validate partition table',
       `Read app partition (${partitionLabel})`,
       'Disconnect from device',
     ]);
@@ -389,6 +367,10 @@ export function useEspOperations() {
       await c.connect();
       return c;
     });
+
+    await runStep('Validate partition table', () =>
+      validateAndDetectPartitionLayout(espController),
+    );
 
     const data = await runStep(`Read app partition (${partitionLabel})`, () =>
       espController.readAppPartition(partitionLabel, (_, p, t) =>
@@ -518,6 +500,7 @@ export function useEspOperations() {
   }> => {
     initializeSteps([
       'Connect to device',
+      'Validate partition table',
       'Read otadata partition',
       'Read app0 partition',
       'Read app1 partition',
@@ -532,6 +515,10 @@ export function useEspOperations() {
       await c.connect();
       return c;
     });
+
+    await runStep('Validate partition table', () =>
+      validateAndDetectPartitionLayout(espController),
+    );
 
     const otaPartition = await runStep('Read otadata partition', () =>
       espController.readOtadataPartition((_, p, t) =>

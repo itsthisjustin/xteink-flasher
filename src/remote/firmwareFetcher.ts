@@ -60,7 +60,7 @@ const x4ChineseFirmwareCheckUrl =
 const x4EnglishFirmwareCheckUrl =
   'http://gotaserver.xteink.com/api/check-update?current_version=V3.0.1&device_type=ESP32C3&device_id=1234';
 const x3ChineseFirmwareCheckUrl =
-  'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=en';
+  'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=zh';
 
 export async function getOfficialFirmwareRemoteData(
   deviceModel: DeviceModel,
