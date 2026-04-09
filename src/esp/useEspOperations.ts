@@ -62,10 +62,9 @@ export function useEspOperations() {
   const [isRunning, setIsRunning] = useState(false);
   const [deviceModel, setDeviceModel] = useState<DeviceModel>('x4');
 
-  const resetStepName =
-    deviceModel === 'x3'
-      ? 'Disconnect (unplug and replug USB to restart)'
-      : 'Reset device';
+  const resetStepName = 'Reset device';
+  const softResetStepName =
+    'Disconnect (unplug and replug USB to restart)';
 
   const validateAndDetectPartitionLayout = async (
     espController: EspController,
@@ -107,7 +106,9 @@ export function useEspOperations() {
 
   const flashRemoteFirmware = async (
     getFirmware: () => Promise<Uint8Array>,
+    { skipReset = false }: { skipReset?: boolean } = {},
   ) => {
+    const stepName = skipReset ? softResetStepName : resetStepName;
     initializeSteps([
       'Connect to device',
       'Validate partition table',
@@ -115,7 +116,7 @@ export function useEspOperations() {
       'Read otadata partition',
       'Flash app partition',
       'Flash otadata partition',
-      resetStepName,
+      stepName,
     ]);
 
     const espController = await runStep('Connect to device', async () => {
@@ -170,8 +171,8 @@ export function useEspOperations() {
       );
     });
 
-    await runStep(resetStepName, () =>
-      espController.disconnect({ skipReset: deviceModel === 'x3' }),
+    await runStep(stepName, () =>
+      espController.disconnect({ skipReset }),
     );
   };
 
@@ -180,7 +181,9 @@ export function useEspOperations() {
   const flashChineseFirmware = async () =>
     flashRemoteFirmware(() => getOfficialFirmware('ch', deviceModel));
   const flashCrossPointFirmware = async () =>
-    flashRemoteFirmware(() => getCommunityFirmware('CrossPoint'));
+    flashRemoteFirmware(() => getCommunityFirmware('CrossPoint'), {
+      skipReset: deviceModel === 'x3',
+    });
 
   const flashCustomFirmware = async (getFile: () => File | undefined) => {
     initializeSteps([
@@ -251,9 +254,7 @@ export function useEspOperations() {
       );
     });
 
-    await runStep(resetStepName, () =>
-      espController.disconnect({ skipReset: deviceModel === 'x3' }),
-    );
+    await runStep(resetStepName, () => espController.disconnect());
   };
 
   const saveFullFlash = async () => {
@@ -317,9 +318,7 @@ export function useEspOperations() {
       ),
     );
 
-    await runStep(resetStepName, () =>
-      espController.disconnect({ skipReset: deviceModel === 'x3' }),
-    );
+    await runStep(resetStepName, () => espController.disconnect());
   };
 
   const readDebugOtadata = async () => {
@@ -427,9 +426,7 @@ export function useEspOperations() {
       ),
     );
 
-    await runStep(resetStepName, () =>
-      espController.disconnect({ skipReset: deviceModel === 'x3' }),
-    );
+    await runStep(resetStepName, () => espController.disconnect());
 
     return otaPartition;
   };

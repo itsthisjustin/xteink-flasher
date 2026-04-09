@@ -251,19 +251,20 @@ export default function Home() {
         <Alert.Content>
           <Alert.Title>Device restart instructions</Alert.Title>
           <Alert.Description>
-            {deviceModel === 'x3' ? (
-              <p>
-                Once you complete a write operation, disconnect the USB cable and
-                connect it again.
-              </p>
-            ) : (
+            <Stack>
               <p>
                 Once you complete a write operation, you will need to restart
                 your device by pressing and releasing the small &ldquo;Reset&rdquo; button
                 near the bottom right, followed quickly by pressing and holding
                 of the main power button for about 3 seconds.
               </p>
-            )}
+              {deviceModel === 'x3' && (
+                <p>
+                  For CrossPoint firmware, disconnect the USB cable and connect
+                  it again instead.
+                </p>
+              )}
+            </Stack>
           </Alert.Description>
         </Alert.Content>
       </Alert.Root>

@@ -42,7 +42,8 @@ const x4FirmwareVersionFallback: OfficialFirmwareVersions = {
 
 const x3FirmwareVersionFallback: OfficialFirmwareVersions = {
   en: {
-    change_log: '',
+    change_log:
+      '1. Optimize EPUB\r\n2. Fix a large number of bugs\r\n3. The index needs to be rebuilt manually',
     download_url:
       'http://8.216.34.42:5001/api/v1/download/ESP32C3_X3/V5.1.6/V5.1.6-X3-EN-PROD-0304_.bin?choose=1&lang=en',
     version: 'V5.1.6',
@@ -61,6 +62,8 @@ const x4EnglishFirmwareCheckUrl =
   'http://gotaserver.xteink.com/api/check-update?current_version=V3.0.1&device_type=ESP32C3&device_id=1234';
 const x3ChineseFirmwareCheckUrl =
   'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=zh';
+const x3EnglishFirmwareCheckUrl =
+  'http://8.216.34.42:5001/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=en';
 
 export async function getOfficialFirmwareRemoteData(
   deviceModel: DeviceModel,
@@ -78,12 +81,14 @@ export async function getOfficialFirmwareRemoteData(
   }
 
   if (deviceModel === 'x3') {
-    // X3: Chinese has a check-update API, English only has a static download URL
-    return fetch(x3ChineseFirmwareCheckUrl)
-      .then((res) => res.json())
-      .then(async (chData) => {
+    return Promise.all([
+      fetch(x3ChineseFirmwareCheckUrl),
+      fetch(x3EnglishFirmwareCheckUrl),
+    ])
+      .then(([chRes, enRes]) => Promise.all([chRes.json(), enRes.json()]))
+      .then(async ([chData, enData]) => {
         const data: OfficialFirmwareVersions = {
-          en: fallback.en,
+          en: enData.data,
           ch: chData.data,
         };
 
