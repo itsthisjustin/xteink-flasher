@@ -167,7 +167,8 @@ export default function Home() {
             disabled={isRunning || !officialFirmwareVersions}
             loading={!officialFirmwareVersions}
           >
-            Flash English firmware ({officialFirmwareVersions?.en ?? '...'})
+            Flash English firmware for {deviceModel.toUpperCase()} (
+            {officialFirmwareVersions?.en ?? '...'})
           </Button>
           <Button
             variant="subtle"
@@ -175,7 +176,8 @@ export default function Home() {
             disabled={isRunning || !officialFirmwareVersions}
             loading={!officialFirmwareVersions}
           >
-            Flash Chinese firmware ({officialFirmwareVersions?.ch ?? '...'})
+            Flash Chinese firmware for {deviceModel.toUpperCase()} (
+            {officialFirmwareVersions?.ch ?? '...'})
           </Button>
           <Button
             variant="subtle"
@@ -183,7 +185,7 @@ export default function Home() {
             disabled={isRunning || !communityFirmwareVersions}
             loading={!communityFirmwareVersions}
           >
-            Flash CrossPoint firmware (
+            Flash CrossPoint firmware for {deviceModel.toUpperCase()} (
             {communityFirmwareVersions?.crossPoint.version}) -{' '}
             {communityFirmwareVersions?.crossPoint.releaseDate}
           </Button>
@@ -201,7 +203,7 @@ export default function Home() {
               }
               disabled={isRunning}
             >
-              Flash firmware from file
+              Flash firmware from file for {deviceModel.toUpperCase()}
             </Button>
           </Stack>
           {process.env.NODE_ENV === 'development' && (
