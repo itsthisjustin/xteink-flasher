@@ -57,13 +57,13 @@ const x3FirmwareVersionFallback: OfficialFirmwareVersions = {
 };
 
 const x4ChineseFirmwareCheckUrl =
-  'http://47.122.74.33:5000/api/check-update?current_version=V3.0.1&device_type=ESP32C3';
+  'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.0&device_type=ESP32C3&device_id=12345&lng=en';
 const x4EnglishFirmwareCheckUrl =
-  'http://gotaserver.xteink.com/api/check-update?current_version=V3.0.1&device_type=ESP32C3&device_id=1234';
+  'https://api-prod.xteink.cc/api/v1/check-update?current_version=V5.1.0&device_type=ESP32C3&device_id=12345&lng=en';
 const x3ChineseFirmwareCheckUrl =
-  'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=zh';
+  'https://api-prod.xteink.cn/api/v1/check-update?current_version=V5.1.0&device_type=ESP32C3_X3&device_id=12345&lng=en';
 const x3EnglishFirmwareCheckUrl =
-  'http://8.216.34.42:5001/api/v1/check-update?current_version=V5.1.3&device_type=ESP32C3_X3&device_id=1052463&choose=1&lang=en';
+  'https://api-prod.xteink.cc/api/v1/check-update?current_version=V5.1.0&device_type=ESP32C3_X3&device_id=12345&lng=en';
 
 export async function getOfficialFirmwareRemoteData(
   deviceModel: DeviceModel,
@@ -140,7 +140,7 @@ export async function getCommunityFirmwareRemoteData(): Promise<CommunityFirmwar
   }
 
   const releaseData = await fetch(
-    'https://api.github.com/repos/daveallie/crosspoint-reader/releases/latest',
+    'https://api.github.com/repos/crosspoint-reader/crosspoint-reader/releases/latest',
   ).then((resp) => resp.json());
 
   const firmwareAsset = releaseData.assets.find((asset: any) =>
