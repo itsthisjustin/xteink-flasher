@@ -80,9 +80,13 @@ export default class EspController {
   }
 
   private espLoader;
+
   private layout: PartitionLayout;
 
-  constructor(device: SerialPort, partitionLayout: PartitionLayout = X4_PARTITION_LAYOUT) {
+  constructor(
+    device: SerialPort,
+    partitionLayout: PartitionLayout = X4_PARTITION_LAYOUT,
+  ) {
     const transport = new Transport(device, false);
     this.layout = partitionLayout;
     this.espLoader = new ESPLoader({
@@ -210,7 +214,11 @@ export default class EspController {
       partitionLabel === 'app0'
         ? this.layout.app0Offset
         : this.layout.app1Offset;
-    return this.espLoader.readFlash(offset, this.layout.appSize, onPacketReceived);
+    return this.espLoader.readFlash(
+      offset,
+      this.layout.appSize,
+      onPacketReceived,
+    );
   }
 
   async readAppPartitionForIdentification(

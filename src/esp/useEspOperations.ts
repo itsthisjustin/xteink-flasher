@@ -37,7 +37,11 @@ const x3PartitionTable = [
   { type: 'data-coredump', offset: 0xff0000, size: 0x10000 },
 ];
 
-type PartitionEntry = { type: string; offset: number; size: number };
+interface PartitionEntry {
+  type: string;
+  offset: number;
+  size: number;
+}
 
 function matchesPartitionTable(
   actual: PartitionEntry[],
@@ -63,8 +67,7 @@ export function useEspOperations() {
   const [deviceModel, setDeviceModel] = useState<DeviceModel>('x4');
 
   const resetStepName = 'Reset device';
-  const softResetStepName =
-    'Disconnect (unplug and replug USB to restart)';
+  const softResetStepName = 'Disconnect (unplug and replug USB to restart)';
 
   const validateAndDetectPartitionLayout = async (
     espController: EspController,
@@ -121,8 +124,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -171,9 +174,7 @@ export function useEspOperations() {
       );
     });
 
-    await runStep(stepName, () =>
-      espController.disconnect({ skipReset }),
-    );
+    await runStep(stepName, () => espController.disconnect({ skipReset }));
   };
 
   const flashEnglishFirmware = async () =>
@@ -206,8 +207,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -266,8 +267,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -306,8 +307,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -330,8 +331,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -361,8 +362,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -396,8 +397,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });
@@ -507,8 +508,8 @@ export function useEspOperations() {
 
     const espController = await runStep('Connect to device', async () => {
       const c = await EspController.fromRequestedDevice(
-            deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
-          );
+        deviceModel === 'x3' ? X3_PARTITION_LAYOUT : X4_PARTITION_LAYOUT,
+      );
       await c.connect();
       return c;
     });

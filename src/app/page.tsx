@@ -11,9 +11,7 @@ import {
   Stack,
   Flex,
   HStack,
-  Text,
 } from '@chakra-ui/react';
-import type { DeviceModel } from '@/esp/useEspOperations';
 import FileUpload, { FileUploadHandle } from '@/components/FileUpload';
 import Steps from '@/components/Steps';
 import { useEspOperations } from '@/esp/useEspOperations';
@@ -241,10 +239,10 @@ export default function Home() {
           <Alert.Title>Change device language</Alert.Title>
           <Alert.Description>
             Before starting the process, it is recommended to change the device
-            language to English. To do this, select &ldquo;Settings&rdquo; icon, then click
-            &ldquo;OK / Confirm&rdquo; button and &ldquo;OK / Confirm&rdquo; again until English is
-            shown. Otherwise, the language will still be Chinese after flashing
-            and you may not notice changes.
+            language to English. To do this, select &ldquo;Settings&rdquo; icon,
+            then click &ldquo;OK / Confirm&rdquo; button and &ldquo;OK /
+            Confirm&rdquo; again until English is shown. Otherwise, the language
+            will still be Chinese after flashing and you may not notice changes.
           </Alert.Description>
         </Alert.Content>
       </Alert.Root>
@@ -256,9 +254,10 @@ export default function Home() {
             <Stack>
               <p>
                 Once you complete a write operation, you will need to restart
-                your device by pressing and releasing the small &ldquo;Reset&rdquo; button
-                near the bottom right, followed quickly by pressing and holding
-                of the main power button for about 3 seconds.
+                your device by pressing and releasing the small
+                &ldquo;Reset&rdquo; button near the bottom right, followed
+                quickly by pressing and holding of the main power button for
+                about 3 seconds.
               </p>
               {deviceModel === 'x3' && (
                 <p>
